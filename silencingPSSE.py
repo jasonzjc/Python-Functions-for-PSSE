@@ -28,14 +28,13 @@ def silence(file_object=None):
     """
     if file_object is None:
         file_object = open(os.devnull, 'w')
-
     # save the original sys.stdout
     old_stdout = sys.stdout
     try:
         # set sys.stdout to a new value
         sys.stdout = file_object
         # halt the function at this point and the tasks n the with statement operates
-        yield
+        yield file_object
     finally:
         # reassigns the original sys.stdout
         sys.stdout = old_stdout
@@ -50,37 +49,60 @@ if __name__ == '__main__':
 
     # File paths
     sav_case = r'{0}\savnw.sav'.format(example_path)
-    dyr_case = r'{0}\savnw.dyr'.format(example_path)
-    out_file = r'{0}\example.out'.format(example_path)  # Edit as desired
 
     # -------------------------------------------------- #
     pssbin_path = bin_path
 
     # Call up PSS/E from Python
-    import sys, os
     sys.path.append(pssbin_path)
     os.environ['PATH'] = (pssbin_path + ';' + os.environ['PATH'])
     import psspy, redirect, dyntools, pssplot
 
-    # silence all outputs
-    with silence():
-      psspy.psseinit(10000)
-
-    # redirect output into the log file
+	# it's very important to redirect PSS/E to Python
+	# if not, stdout will e captured for everything exceept PSS/E
     import redirect
     redirect.psse2py()
+	
+	# Silence Type
+	# 0. silence all outputs
+	# 1. silence all outputs but restore them in a log file
+	# 2. silence all output and put them in a StringIO object, release them as required
+    SilenceType = 0
+    if SilenceType == 0:
+	
+        # silence all outputs
+        print "Choose Silence Type 0: silence all outputs\n"
+        with silence():
+            psspy.psseinit(10000)
+	        # Load and solve the powerflow case
+            ierr = psspy.case(sav_case)
+            iVal = psspy.solved()
 
-    psse_log = open('psse_logfile.log', 'w')
-    with silence(psse_log):
-      psspy.psseinit(10000)
+    elif SilenceType == 1:
+	
+        # redirect output into the log file
+        print "Choose Silence Type 1: silence all outputs and restore them in 'psse_logfile.log'\n"
+        psse_log = open('psse_logfile.log', 'w')
+        with silence(psse_log):
+          psspy.psseinit(10000)
+	      # Load and solve the powerflow case
+          ierr = psspy.case(sav_case)
+          iVal = psspy.solved()
 
-    # writing to file-like object
-    import StringIO
-    stdout = StringIO.StringIO()
-    with silence(stdout):
-        psspy.save('2013-system-normal.sav')
+    elif SilenceType == 2:
+	
+        # writing to file-like object
+        print "Choose Silence Type 2: silence all outputs and restore them in a StringIO object. Print out the outputs later.\n"
+        import StringIO
+        stdout = StringIO.StringIO()
+        with silence(stdout):
+          psspy.psseinit(10000)
+          # Load and solve the powerflow case
+          ierr = psspy.case(sav_case)
+          iVal = psspy.solved()
 
-    print "This isn't redirected"
+        print "Program finished. Up to now there should be no output printed yet.\n"
+        raw_input("Press Enter to print the outputs: \n")
 
-    # retrieving the output from the StringIO object.
-    print stdout.getvalue()
+        # retrieving the output from the StringIO object.
+        print stdout.getvalue()
