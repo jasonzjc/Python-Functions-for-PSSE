@@ -101,3 +101,11 @@ psspy.dist_branch_trip(ibus = 151, jbus = 201, id = '1')
 # Run to 10 seconds
 time = 10
 psspy.run(0,time,0,0,0)
+
+# Export channel data to Excel
+dyntools.CHNF.xlsout(dyntools.CHNF(out_file), 
+                     channels = '', 
+                     show = 'True',
+                     xlsfile = 'out.xls',
+                     sheet = '',
+                     overwritesheet = True)
