@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------- #
 #  Jeff Zhao
-#  11/01/3017
+#  11/01/2017
 #
 #  turn off the output of PSS/E or redirect it to a log file or an object
 #

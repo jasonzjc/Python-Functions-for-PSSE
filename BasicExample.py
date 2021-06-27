@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------- #
 #  Jeff Zhao
-#  10/31/3017
+#  10/31/2017
 #
 #  A simple example script to perform both a flat start and
 #  a dynamic simulation
 #
 #  To run from Python 
 #
-#  Requires Python 2.7 and PSS®E 33 
-#      -or- Python 2.5 and PSS®E 32 
+#  Requires Python 2.7 and PSSï¿½E 33 
+#      -or- Python 2.5 and PSSï¿½E 32 
 # -------------------------------------------------- #
 
 # Directory paths - adjust these to match your installation - check doc_path for API info
