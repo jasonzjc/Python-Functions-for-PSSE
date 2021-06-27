@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
     # -------------------------------------------------- #
     #  Jeff Zhao
-    #  11/10/3017
+    #  11/10/2017
     #
     #  A simple example script to perform both a flat start and
     #  a dynamic simulation
